@@ -8,7 +8,18 @@ const gallery = document.getElementById('gallery');
 
 const flagImg = code => `<img src="https://flagcdn.com/w40/${code}.png" alt="${code}" loading="lazy">`;
 
-function buildPickers(names) {
+function isFutureDateLabel(dateLabel) {
+  if (!dateLabel || dateLabel === 'Unknown date') return false;
+  const matchDate = new Date(`${dateLabel}, 2026 12:00:00`);
+  if (isNaN(matchDate.getTime())) return false;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return matchDate > today;
+}
+
+function buildPickers(names, hideNames = false) {
+  if (hideNames) return `<span class="empty-note">Predictions hidden until match day</span>`;
   if (names.length === 0) return `<span class="empty-note">No picks</span>`;
   return `<ul class="picker-list">${names.map(n => `<li class="picker">${n}</li>`).join('')}</ul>`;
 }
@@ -30,6 +41,7 @@ function render() {
   gallery.innerHTML = '';
   const date = dates[currentIdx];
   const group = grouped[date];
+  const hidePickerNames = isFutureDateLabel(date);
 
   // Date heading with prev/next navigation
   const heading = document.createElement('div');
@@ -86,7 +98,7 @@ function render() {
             <span class="hname">${m.team1.name}</span>
             <span class="hcount">${m.t1.length}</span>
           </div>
-          ${buildPickers(m.t1)}
+          ${buildPickers(m.t1, hidePickerNames)}
         </div>
 
         <!-- Col 3: Draw -->
@@ -95,7 +107,7 @@ function render() {
             <span class="hname">🤝 Draw</span>
             <span class="hcount">${m.draw.length}</span>
           </div>
-          ${buildPickers(m.draw)}
+          ${buildPickers(m.draw, hidePickerNames)}
         </div>
 
         <!-- Col 4: Team 2 Win -->
@@ -105,7 +117,7 @@ function render() {
             <span class="hname">${m.team2.name}</span>
             <span class="hcount">${m.t2.length}</span>
           </div>
-          ${buildPickers(m.t2)}
+          ${buildPickers(m.t2, hidePickerNames)}
         </div>
 
       </div>
