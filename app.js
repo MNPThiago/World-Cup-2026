@@ -10,8 +10,9 @@ const flagImg = code => `<img src="https://flagcdn.com/w40/${code}.png" alt="${c
 
 function isFutureDateLabel(dateLabel) {
   if (!dateLabel || dateLabel === 'Unknown date') return false;
-  const matchDate = new Date(`${dateLabel}, 2026 12:00:00`);
+  const matchDate = new Date(`${dateLabel}, 2026`);
   if (isNaN(matchDate.getTime())) return false;
+  matchDate.setHours(0, 0, 0, 0);
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -88,7 +89,7 @@ function render() {
               ${m.score !== undefined ? `<span class="match-score">${m.score[1]}</span>` : ''}
             </div>
           </div>
-          <span class="vote-count">${total} prediction${total !== 1 ? 's' : ''}</span>
+          <span class="vote-count">${hidePickerNames ? 'Total predictions hidden until match day' : `${total} prediction${total !== 1 ? 's' : ''}`}</span>
         </div>
 
         <!-- Col 2: Team 1 Win -->
@@ -96,7 +97,7 @@ function render() {
           <div class="col-header">
             <span class="hflag">${flagImg(m.team1.flag)}</span>
             <span class="hname">${m.team1.name}</span>
-            <span class="hcount">${m.t1.length}</span>
+            ${hidePickerNames ? '' : `<span class="hcount">${m.t1.length}</span>`}
           </div>
           ${buildPickers(m.t1, hidePickerNames)}
         </div>
@@ -105,7 +106,7 @@ function render() {
         <div class="col-pred col-draw${m.result === 'draw' ? ' col-winner' : ''}">
           <div class="col-header">
             <span class="hname">🤝 Draw</span>
-            <span class="hcount">${m.draw.length}</span>
+            ${hidePickerNames ? '' : `<span class="hcount">${m.draw.length}</span>`}
           </div>
           ${buildPickers(m.draw, hidePickerNames)}
         </div>
@@ -115,7 +116,7 @@ function render() {
           <div class="col-header">
             <span class="hflag">${flagImg(m.team2.flag)}</span>
             <span class="hname">${m.team2.name}</span>
-            <span class="hcount">${m.t2.length}</span>
+            ${hidePickerNames ? '' : `<span class="hcount">${m.t2.length}</span>`}
           </div>
           ${buildPickers(m.t2, hidePickerNames)}
         </div>
