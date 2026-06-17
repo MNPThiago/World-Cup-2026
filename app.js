@@ -13,6 +13,19 @@ function buildPickers(names) {
   return `<ul class="picker-list">${names.map(n => `<li class="picker">${n}</li>`).join('')}</ul>`;
 }
 
+function rebuildGroups() {
+  grouped = {};
+  for (const m of matches) {
+    if (!grouped[m.date]) grouped[m.date] = [];
+    grouped[m.date].push(m);
+  }
+  dates = Object.keys(grouped).sort((a, b) => {
+    if (a === 'Unknown date') return 1;
+    if (b === 'Unknown date') return -1;
+    return new Date(`${a}, 2026`) - new Date(`${b}, 2026`);
+  });
+}
+
 function render() {
   gallery.innerHTML = '';
   const date = dates[currentIdx];
@@ -159,24 +172,14 @@ async function init() {
     return;
   }
 
-  // Build grouped structure
-  grouped = {};
-  for (const m of matches) {
-    if (!grouped[m.date]) grouped[m.date] = [];
-    grouped[m.date].push(m);
-  }
-  dates = Object.keys(grouped);
+  rebuildGroups();
 
   // Default to today's date, fallback to last available day
   const todayLabel = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
   currentIdx = dates.findIndex(d => d === todayLabel);
   if (currentIdx === -1) currentIdx = dates.length - 1;
 
-  applyScores(matches);
   render();
-
-  // Fetch any missing scores in the background and re-render if found
-  fetchAndUpdateScores(render).catch(err => console.warn('[fetchScores]', err));
 }
 
 init();

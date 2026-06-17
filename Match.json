@@ -1,0 +1,296 @@
+[
+  {
+    "MatchID": "M1",
+    "Match": "Mexico vs South Africa",
+    "MatchDate": "2026-06-11",
+    "Score": [
+      2,
+      0
+    ],
+    "Result": "t1",
+    "Winner": "Mexico",
+    "Source": "openfootball/worldcup.json"
+  },
+  {
+    "MatchID": "M2",
+    "Match": "South Korea vs Czechia",
+    "MatchDate": "2026-06-11",
+    "Score": [
+      2,
+      1
+    ],
+    "Result": "t1",
+    "Winner": "South Korea",
+    "Source": "openfootball/worldcup.json"
+  },
+  {
+    "MatchID": "M3",
+    "Match": "Canada  vs Bosnia-Herzegovina",
+    "MatchDate": "2026-06-12",
+    "Score": [
+      1,
+      1
+    ],
+    "Result": "draw",
+    "Winner": null,
+    "Source": "openfootball/worldcup.json"
+  },
+  {
+    "MatchID": "M4",
+    "Match": "United States vs Paraguay",
+    "MatchDate": "2026-06-12",
+    "Score": [
+      4,
+      1
+    ],
+    "Result": "t1",
+    "Winner": "United States",
+    "Source": "openfootball/worldcup.json"
+  },
+  {
+    "MatchID": "M5",
+    "Match": "Qatar vs Switzerland",
+    "MatchDate": "2026-06-13",
+    "Score": [
+      1,
+      1
+    ],
+    "Result": "draw",
+    "Winner": null,
+    "Source": "openfootball/worldcup.json"
+  },
+  {
+    "MatchID": "M6",
+    "Match": "Brazil vs Morocco",
+    "MatchDate": "2026-06-13",
+    "Score": [
+      1,
+      1
+    ],
+    "Result": "draw",
+    "Winner": null,
+    "Source": "openfootball/worldcup.json"
+  },
+  {
+    "MatchID": "M7",
+    "Match": "Haiti vs Scotland",
+    "MatchDate": "2026-06-13",
+    "Score": [
+      0,
+      1
+    ],
+    "Result": "t2",
+    "Winner": "Scotland",
+    "Source": "openfootball/worldcup.json"
+  },
+  {
+    "MatchID": "M8",
+    "Match": "Australia vs Turkey",
+    "MatchDate": "2026-06-13",
+    "Score": [
+      2,
+      0
+    ],
+    "Result": "t1",
+    "Winner": "Australia",
+    "Source": "openfootball/worldcup.json"
+  },
+  {
+    "MatchID": "M9",
+    "Match": "Germany vs Curaçao",
+    "MatchDate": "2026-06-14",
+    "Score": [
+      7,
+      1
+    ],
+    "Result": "t1",
+    "Winner": "Germany",
+    "Source": "openfootball/worldcup.json"
+  },
+  {
+    "MatchID": "M10",
+    "Match": "Netherlands vs Japan",
+    "MatchDate": "2026-06-14",
+    "Score": [
+      2,
+      2
+    ],
+    "Result": "draw",
+    "Winner": null,
+    "Source": "openfootball/worldcup.json"
+  },
+  {
+    "MatchID": "M11",
+    "Match": "Ivory Coast vs Ecuador",
+    "MatchDate": "2026-06-14",
+    "Score": [
+      1,
+      0
+    ],
+    "Result": "t1",
+    "Winner": "Ivory Coast",
+    "Source": "openfootball/worldcup.json"
+  },
+  {
+    "MatchID": "M12",
+    "Match": "Sweden vs Tunisia",
+    "MatchDate": "2026-06-14",
+    "Score": [
+      5,
+      1
+    ],
+    "Result": "t1",
+    "Winner": "Sweden",
+    "Source": "openfootball/worldcup.json"
+  },
+  {
+    "MatchID": "M13",
+    "Match": "Spain vs Cape Verde Islands",
+    "MatchDate": "2026-06-15",
+    "Score": [
+      0,
+      0
+    ],
+    "Result": "draw",
+    "Winner": null,
+    "Source": "openfootball/worldcup.json"
+  },
+  {
+    "MatchID": "M14",
+    "Match": "Belgium vs Egypt",
+    "MatchDate": "2026-06-15",
+    "Score": [
+      1,
+      1
+    ],
+    "Result": "draw",
+    "Winner": null,
+    "Source": "openfootball/worldcup.json"
+  },
+  {
+    "MatchID": "M15",
+    "Match": "Saudi Arabia vs Uruguay",
+    "MatchDate": "2026-06-15",
+    "Score": [
+      1,
+      1
+    ],
+    "Result": "draw",
+    "Winner": null,
+    "Source": "openfootball/worldcup.json"
+  },
+  {
+    "MatchID": "M16",
+    "Match": "Iran vs New Zealand",
+    "MatchDate": "2026-06-15",
+    "Score": [
+      2,
+      2
+    ],
+    "Result": "draw",
+    "Winner": null,
+    "Source": "openfootball/worldcup.json"
+  },
+  {
+    "MatchID": "M17",
+    "Match": "France vs Senegal",
+    "MatchDate": "2026-06-16",
+    "Score": [
+      3,
+      1
+    ],
+    "Result": "t1",
+    "Winner": "France",
+    "Source": "openfootball/worldcup.json"
+  },
+  {
+    "MatchID": "M18",
+    "Match": "Iraq vs Norway",
+    "MatchDate": "2026-06-16",
+    "Score": [
+      1,
+      4
+    ],
+    "Result": "t2",
+    "Winner": "Norway",
+    "Source": "openfootball/worldcup.json"
+  },
+  {
+    "MatchID": "M19",
+    "Match": "Argentina vs Algeria",
+    "MatchDate": "2026-06-16",
+    "Score": [
+      3,
+      0
+    ],
+    "Result": "t1",
+    "Winner": "Argentina",
+    "Source": "openfootball/worldcup.json"
+  },
+  {
+    "MatchID": "M20",
+    "Match": "Austria vs Jordan",
+    "MatchDate": "2026-06-16",
+    "Score": [
+      3,
+      1
+    ],
+    "Result": "t1",
+    "Winner": "Austria",
+    "Source": "openfootball/worldcup.json"
+  },
+  {
+    "MatchID": "M21",
+    "Match": "Portugal vs Congo DR",
+    "MatchDate": "2026-06-17",
+    "Score": [
+      1,
+      1
+    ],
+    "Result": "draw",
+    "Winner": null,
+    "Source": "openfootball/worldcup.json"
+  },
+  {
+    "MatchID": "M22",
+    "Match": "England vs Croatia",
+    "MatchDate": "2026-06-17",
+    "Source": "openfootball/worldcup.json"
+  },
+  {
+    "MatchID": "M23",
+    "Match": "Ghana vs Panama",
+    "MatchDate": "2026-06-17",
+    "Source": "openfootball/worldcup.json"
+  },
+  {
+    "MatchID": "M24",
+    "Match": "Uzbekistan vs Colombia",
+    "MatchDate": "2026-06-17",
+    "Source": "openfootball/worldcup.json"
+  },
+  {
+    "MatchID": "M25",
+    "Match": "Czechia vs South Africa",
+    "MatchDate": "2026-06-18",
+    "Source": "openfootball/worldcup.json"
+  },
+  {
+    "MatchID": "M26",
+    "Match": "Switzerland vs Bosnia-Herzegovina",
+    "MatchDate": "2026-06-18",
+    "Source": "openfootball/worldcup.json"
+  },
+  {
+    "MatchID": "M27",
+    "Match": "Canada vs Qatar",
+    "MatchDate": "2026-06-18",
+    "Source": "openfootball/worldcup.json"
+  },
+  {
+    "MatchID": "M28",
+    "Match": "Mexico vs South Korea",
+    "MatchDate": "2026-06-18",
+    "Source": "openfootball/worldcup.json"
+  }
+]
