@@ -66,18 +66,78 @@ function categorizePrediction(prediction, team1Name, team2Name) {
   return 't2';
 }
 
-// ── CSV / TSV Parsing ──
-// data.csv is tab-separated (SharePoint export).
-// Columns: Title | MatchID | Match | Prediction | UserName | SubmittedAt | Item Type | Path
-function parseTSV(text) {
+// ── CSV Parsing ──
+// Handles the Power Automate export format:
+//   - File may be wrapped in a JSON envelope: {"body":"...csv content..."}
+//   - CSV is RFC 4180: comma-delimited, fields double-quoted, "" = escaped quote
+//   - Columns resolved from header row (resilient to future column reordering)
+// Also handles the legacy tab-separated SharePoint export as a fallback.
+
+function _parseCSVLine(line) {
+  const fields = [];
+  let i = 0;
+  while (i < line.length) {
+    if (line[i] === '"') {
+      let val = '';
+      i++; // skip opening quote
+      while (i < line.length) {
+        if (line[i] === '"' && line[i + 1] === '"') { val += '"'; i += 2; }
+        else if (line[i] === '"') { i++; break; }
+        else { val += line[i++]; }
+      }
+      fields.push(val);
+      if (line[i] === ',') i++;
+    } else {
+      const end = line.indexOf(',', i);
+      if (end === -1) { fields.push(line.slice(i)); break; }
+      fields.push(line.slice(i, end));
+      i = end + 1;
+    }
+  }
+  return fields;
+}
+
+function parseCSV(raw) {
+  // Unwrap Power Automate JSON envelope if present
+  let text = raw.trim();
+  if (text.startsWith('{')) {
+    try { text = JSON.parse(text).body; } catch (_) { /* not JSON, use as-is */ }
+  }
+
   const lines = text.trim().split(/\r?\n/);
+  if (lines.length < 2) return [];
+
+  const firstLine = lines[0];
+
+  // Legacy tab-separated fallback
+  if (!firstLine.startsWith('@odata') && firstLine.includes('\t')) {
+    return lines.slice(1).filter(Boolean).map(line => {
+      const cols = line.split('\t');
+      return {
+        matchId:    (cols[1] || '').trim(),
+        matchLabel: (cols[2] || '').trim(),
+        prediction: (cols[3] || '').trim(),
+        userName:   (cols[4] || '').trim(),
+      };
+    });
+  }
+
+  // New Power Automate CSV — resolve columns from header
+  const header = _parseCSVLine(firstLine);
+  const idx = {
+    matchId:    header.findIndex(h => h.trim() === 'MatchID'),
+    matchLabel: header.findIndex(h => h.trim() === 'Match'),
+    prediction: header.findIndex(h => h.trim() === 'Prediction'),
+    userName:   header.findIndex(h => h.trim() === 'UserName'),
+  };
+
   return lines.slice(1).filter(Boolean).map(line => {
-    const cols = line.split('\t');
+    const cols = _parseCSVLine(line);
     return {
-      matchId:    (cols[1] || '').trim(),
-      matchLabel: (cols[2] || '').trim(),
-      prediction: (cols[3] || '').trim(),
-      userName:   (cols[4] || '').trim(),
+      matchId:    (cols[idx.matchId]    || '').trim(),
+      matchLabel: (cols[idx.matchLabel] || '').trim(),
+      prediction: (cols[idx.prediction] || '').trim(),
+      userName:   (cols[idx.userName]   || '').trim(),
     };
   });
 }
@@ -128,7 +188,7 @@ async function loadMatches() {
   const res = await fetch('data.csv');
   if (!res.ok) throw new Error(`Could not load data.csv (HTTP ${res.status})`);
   const text = await res.text();
-  return buildMatches(parseTSV(text));
+  return buildMatches(parseCSV(text));
 }
 
 // ── Apply Scores ──
