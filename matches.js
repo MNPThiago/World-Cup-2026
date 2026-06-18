@@ -1,3 +1,4 @@
+const test = 0;
 // ── Team flag codes ──
 // Maps lowercase team name → ISO flag code for flagcdn.com.
 // Add new teams here as needed.

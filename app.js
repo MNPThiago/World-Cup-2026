@@ -1,3 +1,4 @@
+const test = 0;
 // ── Module state ──
 let matches   = [];
 let grouped   = {};

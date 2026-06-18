@@ -28,10 +28,10 @@
     "Match": "Czech Republic vs South Africa",
     "MatchDate": "2026-06-18",
     "Score": [
-      null,
-      null
+      1,
+      1
     ],
-    "Result": null,
+    "Result": "draw",
     "Winner": null,
     "Source": "openfootball/worldcup.json"
   },
