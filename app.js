@@ -174,6 +174,93 @@ document.getElementById('leaderboard-btn').addEventListener('click', () => {
 document.getElementById('lb-close').addEventListener('click', () => modalEl.classList.remove('open'));
 modalEl.addEventListener('click', e => { if (e.target === e.currentTarget) modalEl.classList.remove('open'); });
 
+// ── Fetch Scores ──
+async function fetchTodayScores() {
+  const btn = document.getElementById('fetch-score-btn');
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = '⏳ Fetching…';
+
+  try {
+    const OPENFOOTBALL_URL = 'https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json';
+    const res = await fetch(OPENFOOTBALL_URL);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const { matches: ofMatches } = await res.json();
+
+    // Get today's and yesterday's date labels
+    const today = new Date();
+    const todayLabel = today.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+    
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayLabel = yesterday.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+
+    // Helper from matches.js context
+    const normalize = (s) => String(s || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]/g, '');
+
+    const teamMatches = (apiTeam, localTeam) => {
+      const apiNorm = normalize(apiTeam);
+      const aliases = {
+        'south korea': ['korea republic'],
+        'czechia': ['czech republic'],
+        'bosnia-herzegovina': ['bosnia and herzegovina', 'bosnia & herzegovina'],
+        'united states': ['usa', 'united states of america'],
+        'congo dr': ['dr congo'],
+        'cape verde islands': ['cape verde'],
+        'curaçao': ['curacao'],
+      };
+      const key = String(localTeam || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').trim();
+      const candidates = [localTeam, ...(aliases[key] || [])];
+      for (const candidate of candidates) {
+        if (normalize(candidate) === apiNorm) return true;
+      }
+      return false;
+    };
+
+    let updated = 0;
+
+    // Update today's and yesterday's matches only
+    for (const m of matches) {
+      if (m.date !== todayLabel && m.date !== yesterdayLabel) continue;
+
+      const vsSplit = m.id.match(/^M\d+/) ? m.team1.name + ' vs ' + m.team2.name : null;
+      if (!vsSplit) continue;
+
+      // Find matching OpenFootball match
+      for (const of of ofMatches) {
+        if (teamMatches(of.team1, m.team1.name) && teamMatches(of.team2, m.team2.name)) {
+          const ft = of.score && of.score.ft;
+          if (Array.isArray(ft) && ft.length >= 2) {
+            const t1Score = Number(ft[0]);
+            const t2Score = Number(ft[1]);
+            if (!isNaN(t1Score) && !isNaN(t2Score)) {
+              m.score = [t1Score, t2Score];
+              m.result = t1Score > t2Score ? 't1' : t2Score > t1Score ? 't2' : 'draw';
+              m.winner = m.result === 't1' ? m.team1.name : m.result === 't2' ? m.team2.name : null;
+              updated++;
+            }
+          }
+          break;
+        }
+      }
+    }
+
+    render();
+    btn.textContent = `✓ Updated ${updated} match${updated !== 1 ? 'es' : ''}`;
+    setTimeout(() => { btn.textContent = originalText; btn.disabled = false; }, 2000);
+  } catch (err) {
+    console.error('Fetch score error:', err);
+    btn.textContent = '❌ Error';
+    setTimeout(() => { btn.textContent = originalText; btn.disabled = false; }, 2000);
+  }
+}
+
+document.getElementById('fetch-score-btn').addEventListener('click', fetchTodayScores);
+
 // ── Init ──
 async function init() {
   gallery.innerHTML = '<p style="text-align:center;color:var(--muted);padding:40px">Loading matches…</p>';
