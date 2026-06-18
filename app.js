@@ -68,6 +68,11 @@ function render() {
     card.className = 'card';
 
     const total = m.t1.length + m.draw.length + m.t2.length;
+    const hasResult = m.result !== null && m.result !== undefined
+      && Array.isArray(m.score)
+      && m.score.length >= 2
+      && m.score[0] !== null
+      && m.score[1] !== null;
 
     card.innerHTML = `
       <div class="card-grid">
@@ -80,13 +85,13 @@ function render() {
             <div class="team-row">
               <span class="flag">${flagImg(m.team1.flag)}</span>
               <span>${m.team1.name}</span>
-              ${m.score !== undefined ? `<span class="match-score">${m.score[0]}</span>` : ''}
+              ${hasResult ? `<span class="match-score">${m.score[0]}</span>` : ''}
             </div>
-            <span class="vs-badge${m.score !== undefined ? ' has-score' : ''}">${m.score !== undefined ? '&ndash;' : 'VS'}</span>
+            <span class="vs-badge${hasResult ? ' has-score' : ''}">${hasResult ? '&ndash;' : 'VS'}</span>
             <div class="team-row">
               <span class="flag">${flagImg(m.team2.flag)}</span>
               <span>${m.team2.name}</span>
-              ${m.score !== undefined ? `<span class="match-score">${m.score[1]}</span>` : ''}
+              ${hasResult ? `<span class="match-score">${m.score[1]}</span>` : ''}
             </div>
           </div>
           <span class="vote-count">${hidePickerNames ? 'Total predictions hidden until match day' : `${total} prediction${total !== 1 ? 's' : ''}`}</span>

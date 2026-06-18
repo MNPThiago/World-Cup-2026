@@ -4,8 +4,10 @@
 const TEAM_FLAGS = {
   'mexico': 'mx',              'south africa': 'za',
   'south korea': 'kr',         'czechia': 'cz',
-  'canada': 'ca',              'bosnia-herzegovina': 'ba',
-  'united states': 'us',       'paraguay': 'py',
+  'czech republic': 'cz',      'canada': 'ca',
+  'bosnia herzegovina': 'ba',   'bosnia and herzegovina': 'ba',
+  'united states': 'us',       'usa': 'us',
+  'paraguay': 'py',
   'portugal': 'pt',            'congo dr': 'cd',
   'dr congo': 'cd',            'england': 'gb-eng',
   'croatia': 'hr',             'ghana': 'gh',
@@ -15,7 +17,8 @@ const TEAM_FLAGS = {
   'brazil': 'br',              'morocco': 'ma',
   'haiti': 'ht',               'scotland': 'gb-sct',
   'australia': 'au',           'turkey': 'tr',
-  'germany': 'de',             'curaçao': 'cw',
+  'turkiye': 'tr',             'cape verde': 'cv',
+  'curacao': 'cw',             'germany': 'de',
   'netherlands': 'nl',         'japan': 'jp',
   'ivory coast': 'ci',         'ecuador': 'ec',
   'sweden': 'se',              'tunisia': 'tn',
@@ -30,9 +33,48 @@ const TEAM_FLAGS = {
   'turkiey': 'tr'
 };
 
+const TEAM_CANONICAL = {
+  'south korea': 'south korea',
+  'korea republic': 'south korea',
+  'republic of korea': 'south korea',
+  'czechia': 'czech republic',
+  'czech republic': 'czech republic',
+  'bosnia herzegovina': 'bosnia herzegovina',
+  'bosnia and herzegovina': 'bosnia herzegovina',
+  'united states': 'usa',
+  'united states of america': 'usa',
+  'usa': 'usa',
+  'congo dr': 'dr congo',
+  'dr congo': 'dr congo',
+  'cape verde islands': 'cape verde',
+  'cape verde': 'cape verde',
+  'turkiye': 'turkey',
+  'turkiey': 'turkey',
+  'turkey': 'turkey',
+  'curacao': 'curacao',
+};
+
 // ── Helpers ──
 function _normalize(s) {
-  return s.toLowerCase().replace(/\s+/g, ' ').trim();
+  return String(s || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function _canonicalTeamName(teamName) {
+  return TEAM_CANONICAL[_normalize(teamName)] || _normalize(teamName);
+}
+
+function _normalizeMatchLabel(value) {
+  const parts = String(value || '').split(' vs ');
+  if (parts.length < 2) return _canonicalTeamName(value);
+  const team1 = _canonicalTeamName(parts[0]);
+  const team2 = _canonicalTeamName(parts.slice(1).join(' vs '));
+  return `${team1} vs ${team2}`;
 }
 
 function _flagCode(teamName) {
@@ -41,10 +83,22 @@ function _flagCode(teamName) {
 
 function _categorizePrediction(prediction, team1, team2) {
   const pred = _normalize(prediction);
+  const team1Canonical = _canonicalTeamName(team1);
+  const team2Canonical = _canonicalTeamName(team2);
+
   if (pred === 'draw') return 'draw';
-  if (pred === _normalize(team1) + ' win') return 't1';
-  if (pred === _normalize(team2) + ' win') return 't2';
-  if (pred.startsWith(_normalize(team1))) return 't1';
+
+  const predTeamRaw = pred.replace(/\bwin\b/g, '').trim();
+  const predTeamCanonical = _canonicalTeamName(predTeamRaw);
+
+  if (predTeamCanonical === team1Canonical) return 't1';
+  if (predTeamCanonical === team2Canonical) return 't2';
+
+  if (pred === `${team1Canonical} win`) return 't1';
+  if (pred === `${team2Canonical} win`) return 't2';
+  if (pred.startsWith(team1Canonical)) return 't1';
+  if (pred.startsWith(team2Canonical)) return 't2';
+
   return 't2';
 }
 
@@ -68,9 +122,9 @@ async function _loadMatchInfoMap() {
     const rows = await res.json();
     const map = {};
     for (const row of rows) {
-      const id = (row.MatchID || '').trim();
-      if (!id) continue;
-      map[id] = row;
+      const match = (row.Match || '').trim();
+      if (!match) continue;
+      map[_normalizeMatchLabel(match)] = row;
     }
     return map;
   } catch (_) {
@@ -79,8 +133,8 @@ async function _loadMatchInfoMap() {
 }
 
 // ── Load Matches ──
-// Fetches data.json (written by Power Automate), groups by MatchID,
-// categorises predictions, and merges known scores.
+// Fetches data.json (written by Power Automate), groups by Match text,
+// categorises predictions, and merges schedule rows from Match.json.
 async function loadMatches() {
   const res = await fetch('data.json');
   if (!res.ok) throw new Error(`Could not load data.json (HTTP ${res.status})`);
@@ -100,26 +154,31 @@ async function loadMatches() {
 
   const byMatch = {};
   for (const r of records) {
-    const id = (r.MatchID || '').trim();
-    if (!id) continue;
-    if (!byMatch[id]) {
-      byMatch[id] = {
-        matchLabel:  (r.Match || '').trim(),
+    const matchLabel = (r.Match || '').trim();
+    if (!matchLabel) continue;
+
+    const key = _normalizeMatchLabel(matchLabel);
+    if (!byMatch[key]) {
+      byMatch[key] = {
+        matchLabel,
         submittedAt: r.SubmittedAt,
         rows: [],
       };
     }
-    byMatch[id].rows.push({
+    byMatch[key].rows.push({
       prediction: (r.Prediction || '').trim(),
       userName:   (r.UserName   || '').trim(),
     });
   }
 
-  const matches = Object.entries(byMatch).map(([id, { matchLabel, submittedAt, rows }]) => {
-    const info = matchInfoMap[id] || null;
-    const vsSplit  = matchLabel.split(' vs ');
-    const team1    = vsSplit[0].trim();
-    const team2    = vsSplit.slice(1).join(' vs ').trim();
+  const matches = Object.values(matchInfoMap).map((info) => {
+    const matchLabel = (info && info.Match ? info.Match : '').trim();
+    const byMatchRow = byMatch[_normalizeMatchLabel(matchLabel)] || null;
+    const submittedAt = byMatchRow ? byMatchRow.submittedAt : null;
+    const rows = byMatchRow ? byMatchRow.rows : [];
+    const vsSplit = matchLabel.split(' vs ');
+    const team1 = vsSplit[0].trim();
+    const team2 = vsSplit.slice(1).join(' vs ').trim();
 
     const t1 = [], draw = [], t2 = [];
     for (const { prediction, userName } of rows) {
@@ -130,8 +189,8 @@ async function loadMatches() {
     }
 
     return {
-      id,
-      date:  info && info.MatchDate ? _isoToLabel(info.MatchDate) : _submittedAtToNextDayLabel(submittedAt),
+      id: info && info.MatchID ? info.MatchID.trim() : matchLabel,
+      date: info && info.MatchDate ? _isoToLabel(info.MatchDate) : _submittedAtToNextDayLabel(submittedAt),
       team1: { name: team1, flag: _flagCode(team1) },
       team2: { name: team2, flag: _flagCode(team2) },
       score: Array.isArray(info && info.Score) ? info.Score : undefined,
@@ -141,6 +200,6 @@ async function loadMatches() {
     };
   });
 
-  matches.sort((a, b) => parseInt(a.id.slice(1), 10) - parseInt(b.id.slice(1), 10));
+  matches.sort((a, b) => new Date(`${a.date}, 2026`) - new Date(`${b.date}, 2026`));
   return matches;
 }
