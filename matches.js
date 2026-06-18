@@ -83,7 +83,18 @@ async function _loadMatchInfoMap() {
 async function loadMatches() {
   const res = await fetch('data.json');
   if (!res.ok) throw new Error(`Could not load data.json (HTTP ${res.status})`);
-  const records = await res.json();
+  const payload = await res.json();
+  const records = Array.isArray(payload)
+    ? payload
+    : Array.isArray(payload && payload.Body)
+      ? payload.Body
+      : Array.isArray(payload && payload.body)
+        ? payload.body
+        : [];
+
+  if (!Array.isArray(records)) {
+    throw new Error('Invalid data.json format: expected an array or { Body: [...] }');
+  }
   const matchInfoMap = await _loadMatchInfoMap();
 
   const byMatch = {};

@@ -110,6 +110,13 @@ function findOpenFootballMatch(allMatches, team1, team2) {
   return null;
 }
 
+function extractRows(payload) {
+  if (Array.isArray(payload)) return payload;
+  if (payload && Array.isArray(payload.Body)) return payload.Body;
+  if (payload && Array.isArray(payload.body)) return payload.body;
+  throw new Error('Invalid data.json format: expected an array or { Body: [...] }');
+}
+
 async function loadOpenFootballMatches() {
   const response = await fetch(OPENFOOTBALL_URL);
   if (!response.ok) throw new Error(`OpenFootball HTTP ${response.status}`);
@@ -122,7 +129,7 @@ async function loadOpenFootballMatches() {
 
 async function main() {
   const rawData = await fs.readFile(DATA_PATH, 'utf8');
-  const rows = JSON.parse(rawData);
+  const rows = extractRows(JSON.parse(rawData));
   const sourceMatches = uniqueMatches(rows);
   const openfootballMatches = await loadOpenFootballMatches();
 
