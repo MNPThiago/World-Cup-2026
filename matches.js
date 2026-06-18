@@ -27,6 +27,7 @@ const TEAM_FLAGS = {
   'iraq': 'iq',                'norway': 'no',
   'argentina': 'ar',           'algeria': 'dz',
   'austria': 'at',             'jordan': 'jo',
+  'turkiey': 'tr'
 };
 
 // ── Helpers ──
