@@ -1,0 +1,79 @@
+name: Update Match Scores
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download World Cup data
+        run: |
+          curl -s https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json -o raw-worldcup.json
+
+      - name: Transform to Match.json
+        run: |
+          node <<'EOF'
+          const fs = require('fs');
+
+          const data = JSON.parse(
+            fs.readFileSync('raw-worldcup.json', 'utf8')
+          );
+
+          const matches = (data.matches || []).map((m, i) => {
+            const score1 = m.score1 ?? null;
+            const score2 = m.score2 ?? null;
+
+            let result = null;
+            let winner = null;
+
+            if (score1 !== null && score2 !== null) {
+              if (score1 > score2) {
+                result = 't1';
+                winner = m.team1.name;
+              } else if (score2 > score1) {
+                result = 't2';
+                winner = m.team2.name;
+              } else {
+                result = 'draw';
+                winner = 'Draw';
+              }
+            }
+
+            return {
+              MatchID: `M${i + 1}`,
+              Match: `${m.team1.name} vs ${m.team2.name}`,
+              MatchDate: m.date,
+              Score: [score1, score2],
+              Result: result,
+              Winner: winner,
+              Source: 'openfootball/worldcup.json'
+            };
+          });
+
+          fs.writeFileSync(
+            'Match.json',
+            JSON.stringify(matches, null, 2)
+          );
+          EOF
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add Match.json
+
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Update Match.json from OpenFootball"
+            git push
+          fi
