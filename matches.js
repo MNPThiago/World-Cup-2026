@@ -1,4 +1,3 @@
-const test = 0;
 // ── Team flag codes ──
 // Maps lowercase team name → ISO flag code for flagcdn.com.
 // Add new teams here as needed.
@@ -137,9 +136,17 @@ async function _loadMatchInfoMap() {
 // Fetches data.json (written by Power Automate), groups by Match text,
 // categorises predictions, and merges schedule rows from Match.json.
 async function loadMatches() {
-  const res = await fetch('data.json');
-  if (!res.ok) throw new Error(`Could not load data.json (HTTP ${res.status})`);
-  const payload = await res.json();
+  let payload;
+  let dataSource = 'data.json';
+
+  let res = await fetch('data.json');
+  if (!res.ok) {
+    dataSource = 'predictions.json';
+    res = await fetch('predictions.json');
+  }
+  if (!res.ok) throw new Error(`Could not load data.json or predictions.json (HTTP ${res.status})`);
+
+  payload = await res.json();
   const records = Array.isArray(payload)
     ? payload
     : Array.isArray(payload && payload.Body)
@@ -149,7 +156,7 @@ async function loadMatches() {
         : [];
 
   if (!Array.isArray(records)) {
-    throw new Error('Invalid data.json format: expected an array or { Body: [...] }');
+    throw new Error(`Invalid ${dataSource} format: expected an array or { Body: [...] }`);
   }
   const matchInfoMap = await _loadMatchInfoMap();
 
