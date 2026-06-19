@@ -88,8 +88,10 @@ app.all("/mcp", async (req, res) => {
       sessionIdGenerator: undefined // stateless MCP
     });
 
-    await server.connect(transport);
-    await transport.handleRequest(req, res);
+    //await server.connect(transport);
+    //await transport.handleRequest(req, res);
+    await server.handleRequest(transport, req, res);
+    
   } catch (err) {
     console.error("❌ MCP Error:", err);
     res.status(500).json({
