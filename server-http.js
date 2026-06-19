@@ -57,8 +57,8 @@ server.tool(
     const matches = getMatchesByDate(date);
 
     console.log("📩 MCP TOOL CALLED");
-    console.log("date received:", date);
-    console.log("match count:", matches.length);
+    console.log("date:", date);
+    console.log("count:", matches.length);
 
     return {
       content: [
@@ -75,30 +75,15 @@ server.tool(
 );
 
 // ----------------------------
-// MCP session store (IMPORTANT)
+// MCP Endpoint (IMPORTANT: SIMPLE + STATLESS)
 // ----------------------------
-const transports = new Map();
-
-// ----------------------------
-// MCP Endpoint
-// ----------------------------
-app.all("/mcp", async (req, res) => {
+app.post("/mcp", async (req, res) => {
   try {
-    const sessionId =
-      req.headers["mcp-session-id"] ||
-      "default";
+    const transport = new StreamableHTTPServerTransport({
+      sessionIdGenerator: undefined
+    });
 
-    let transport = transports.get(sessionId);
-
-    if (!transport) {
-      transport = new StreamableHTTPServerTransport({
-        sessionIdGenerator: () => sessionId
-      });
-
-      await server.connect(transport);
-      transports.set(sessionId, transport);
-    }
-
+    await server.connect(transport);
     await transport.handleRequest(req, res);
 
   } catch (err) {
@@ -113,7 +98,7 @@ app.all("/mcp", async (req, res) => {
 // Health check
 // ----------------------------
 app.get("/", (req, res) => {
-  res.send("Football MCP Server is running. v3");
+  res.send("Football MCP Server is running. v4");
 });
 
 // ----------------------------
