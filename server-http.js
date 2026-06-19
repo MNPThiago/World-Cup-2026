@@ -31,19 +31,17 @@ const server = new McpServer({
 // Helpers
 // ----------------------------
 function normalizeDate(value) {
-  const d = new Date(value);
-  return d.toISOString().split("T")[0];
+  return new Date(value).toISOString().split("T")[0];
 }
 
 function getMatchesByDate(date) {
   const filePath = path.join(process.cwd(), "Match.json");
-
   const matches = JSON.parse(fs.readFileSync(filePath, "utf8"));
 
-  const targetDate = normalizeDate(date);
+  const target = normalizeDate(date);
 
   return matches.filter(
-    (m) => normalizeDate(m.MatchDate) === targetDate
+    (m) => normalizeDate(m.MatchDate) === target
   );
 }
 
@@ -56,6 +54,7 @@ server.tool(
     date: z.string()
   },
   async ({ date }) => {
+
     const matches = getMatchesByDate(date);
 
     console.log("📩 MCP TOOL CALLED");
@@ -69,7 +68,7 @@ server.tool(
           text:
             matches.length > 0
               ? matches.map(m => `- ${m.Match}`).join("\n")
-              : `I could not find match data for ${date}`
+              : `No matches found for ${date}`
         }
       ]
     };
@@ -77,7 +76,7 @@ server.tool(
 );
 
 // ----------------------------
-// MCP Endpoint
+// MCP Endpoint (CORRECT)
 // ----------------------------
 app.all("/mcp", async (req, res) => {
   try {
@@ -85,6 +84,8 @@ app.all("/mcp", async (req, res) => {
       sessionIdGenerator: undefined
     });
 
+    // IMPORTANT: correct MCP lifecycle
+    await server.connect(transport);
     await transport.handleRequest(req, res);
 
   } catch (err) {
@@ -96,14 +97,14 @@ app.all("/mcp", async (req, res) => {
 });
 
 // ----------------------------
-// Health Check
+// Health check
 // ----------------------------
 app.get("/", (req, res) => {
-  res.send("Football MCP Server is running. V1");
+  res.send("Football MCP Server is running. V2");
 });
 
 // ----------------------------
-// Start Server
+// Start server
 // ----------------------------
 const port = process.env.PORT || 3000;
 
