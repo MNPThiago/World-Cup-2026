@@ -7,42 +7,59 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { z } from "zod";
 
+// ----------------------------
+// Setup paths (ESM-safe)
+// ----------------------------
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-//
-// Create MCP server
-//
+// ----------------------------
+// MCP Server
+// ----------------------------
 const server = new McpServer({
   name: "github-match-agent",
   version: "1.0.0"
 });
 
-//
-// Business logic (same as server.js)
-//
-function getMatchesByDate(date) {
-  const filePath = path.join(__dirname, "..", "Match.json");
+// ----------------------------
+// Helpers
+// ----------------------------
 
-  const matches = JSON.parse(
-    fs.readFileSync(filePath, "utf8")
-  );
+// Robust date normalization (fixes Copilot formatting issues)
+function normalizeDate(value) {
+  const d = new Date(value);
+  return d.toISOString().split("T")[0];
+}
+
+// Load and filter matches
+function getMatchesByDate(date) {
+  const filePath = path.join(process.cwd(), "Match.json");
+
+  const matches = JSON.parse(fs.readFileSync(filePath, "utf8"));
+
+  const targetDate = normalizeDate(date);
 
   return matches.filter(
-    m => m.MatchDate === date
+    (m) => normalizeDate(m.MatchDate) === targetDate
   );
 }
 
-//
-// MCP tool (same as server.js)
-//
+// ----------------------------
+// MCP Tool
+// ----------------------------
 server.tool(
   "getMatchesByDate",
   {
     date: z.string()
   },
   async ({ date }) => {
+
     const matches = getMatchesByDate(date);
+
+    console.log("📩 MCP TOOL CALLED");
+    console.log("date received:", date);
+    console.log("matches:", matches);
+    console.log("match count:", matches.length);
 
     return {
       content: [
@@ -51,51 +68,46 @@ server.tool(
           text:
             matches.length > 0
               ? matches.map(m => `- ${m.Match}`).join("\n")
-              : `No matches found for ${date}`
+              : `I could not find match data for ${date}`
         }
       ]
     };
   }
 );
 
-//
-// Express app
-//
+// ----------------------------
+// Express App
+// ----------------------------
 const app = express();
 app.use(express.json());
 
-//
 // MCP endpoint
-//
 app.all("/mcp", async (req, res) => {
   try {
     const transport = new StreamableHTTPServerTransport({
-      sessionIdGenerator: undefined // stateless
+      sessionIdGenerator: undefined // stateless MCP
     });
 
     await server.connect(transport);
     await transport.handleRequest(req, res);
-  }
-  catch (err) {
-    console.error(err);
+  } catch (err) {
+    console.error("❌ MCP Error:", err);
     res.status(500).json({
       error: err.message
     });
   }
 });
 
-//
-// Health endpoint
-//
+// Health check
 app.get("/", (req, res) => {
   res.send("Football MCP Server is running.");
 });
 
-//
+// ----------------------------
 // Start server
-//
+// ----------------------------
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
-  console.log(`Football MCP Server listening on port ${port}`);
+  console.log(`🚀 MCP Server running on port ${port}`);
 });
