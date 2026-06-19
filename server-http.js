@@ -4,40 +4,33 @@ import express from "express";
 import { fileURLToPath } from "url";
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
+// Use the official SSEServerTransport for standard HTTP MCP deployments
+import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { z } from "zod";
 
-// ----------------------------
-// Setup paths (ESM-safe)
-// ----------------------------
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// ----------------------------
-// Express App
-// ----------------------------
 const app = express();
 app.use(express.json());
 
-// ----------------------------
-// MCP Server (singleton)
-// ----------------------------
+// Initialize the MCP Server
 const server = new McpServer({
   name: "github-match-agent",
   version: "1.0.0"
 });
 
-// ----------------------------
-// Helpers
-// ----------------------------
+// Helper Functions
 function normalizeDate(value) {
   return new Date(value).toISOString().split("T")[0];
 }
 
 function getMatchesByDate(date) {
   const filePath = path.join(process.cwd(), "Match.json");
+  if (!fs.existsSync(filePath)) {
+    return [];
+  }
   const matches = JSON.parse(fs.readFileSync(filePath, "utf8"));
-
   const target = normalizeDate(date);
 
   return matches.filter(
@@ -45,14 +38,10 @@ function getMatchesByDate(date) {
   );
 }
 
-// ----------------------------
-// MCP Tool
-// ----------------------------
+// Define the Tool
 server.tool(
   "getMatchesByDate",
-  {
-    date: z.string()
-  },
+  { date: z.string() },
   async ({ date }) => {
     const matches = getMatchesByDate(date);
 
@@ -64,48 +53,44 @@ server.tool(
       content: [
         {
           type: "text",
-          text:
-            matches.length > 0
-              ? matches.map(m => `- ${m.Match}`).join("\n")
-              : `No matches found for ${date}`
+          text: matches.length > 0
+            ? matches.map(m => `- ${m.Match}`).join("\n")
+            : `No matches found for ${date}`
         }
       ]
     };
   }
 );
 
-// ----------------------------
-// MCP Endpoint (IMPORTANT: SIMPLE + STATLESS)
-// ----------------------------
-app.post("/mcp", async (req, res) => {
-  try {
-    const transport = new StreamableHTTPServerTransport({
-      sessionIdGenerator: undefined
-    });
+// Track active sessions globally
+let transportSession = null;
 
-    await server.connect(transport);
-    await transport.handleRequest(req, res);
+// 1. SSE Connection Route (Copilot calls this first)
+app.get("/sse", async (req, res) => {
+  console.log("🔄 Copilot initiating SSE Handshake...");
+  
+  // Point Copilot back to our POST endpoint to handle processing
+  transportSession = new SSEServerTransport("/messages", res);
+  
+  await server.connect(transportSession);
+});
 
-  } catch (err) {
-    console.error("❌ MCP Error:", err);
-    res.status(500).json({
-      error: err.message
-    });
+// 2. Message Payload Handler Route (Copilot passes requests here)
+app.post("/messages", async (req, res) => {
+  if (!transportSession) {
+    return res.status(400).json({ error: "No active SSE transport session established." });
   }
+  
+  console.log("📩 Received Message Payload:", JSON.stringify(req.body));
+  await transportSession.handleMessage(req, res);
 });
 
-// ----------------------------
-// Health check
-// ----------------------------
+// Root Healthcheck
 app.get("/", (req, res) => {
-  res.send("Football MCP Server is running. v4");
+  res.send("Football MCP Server is running cleanly. v5");
 });
 
-// ----------------------------
-// Start server
-// ----------------------------
 const port = process.env.PORT || 3000;
-
 app.listen(port, () => {
   console.log(`🚀 MCP Server running on port ${port}`);
 });
