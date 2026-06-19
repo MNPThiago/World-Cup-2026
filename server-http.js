@@ -14,7 +14,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // ----------------------------
-// MCP Server
+// Express App
+// ----------------------------
+const app = express();
+app.use(express.json());
+
+// ----------------------------
+// MCP Server (singleton)
 // ----------------------------
 const server = new McpServer({
   name: "github-match-agent",
@@ -24,14 +30,11 @@ const server = new McpServer({
 // ----------------------------
 // Helpers
 // ----------------------------
-
-// Robust date normalization (fixes Copilot formatting issues)
 function normalizeDate(value) {
   const d = new Date(value);
   return d.toISOString().split("T")[0];
 }
 
-// Load and filter matches
 function getMatchesByDate(date) {
   const filePath = path.join(process.cwd(), "Match.json");
 
@@ -53,12 +56,10 @@ server.tool(
     date: z.string()
   },
   async ({ date }) => {
-
     const matches = getMatchesByDate(date);
 
     console.log("📩 MCP TOOL CALLED");
     console.log("date received:", date);
-    console.log("matches:", matches);
     console.log("match count:", matches.length);
 
     return {
@@ -76,22 +77,16 @@ server.tool(
 );
 
 // ----------------------------
-// Express App
+// MCP Endpoint
 // ----------------------------
-const app = express();
-app.use(express.json());
-
-// MCP endpoint
 app.all("/mcp", async (req, res) => {
   try {
     const transport = new StreamableHTTPServerTransport({
-      sessionIdGenerator: undefined // stateless MCP
+      sessionIdGenerator: undefined
     });
 
-    //await server.connect(transport);
-    //await transport.handleRequest(req, res);
-    await server.handleRequest(transport, req, res);
-    
+    await transport.handleRequest(req, res);
+
   } catch (err) {
     console.error("❌ MCP Error:", err);
     res.status(500).json({
@@ -100,13 +95,15 @@ app.all("/mcp", async (req, res) => {
   }
 });
 
-// Health check
+// ----------------------------
+// Health Check
+// ----------------------------
 app.get("/", (req, res) => {
-  res.send("Football MCP Server is running.");
+  res.send("Football MCP Server is running. V1");
 });
 
 // ----------------------------
-// Start server
+// Start Server
 // ----------------------------
 const port = process.env.PORT || 3000;
 
