@@ -73,20 +73,16 @@ function buildMcpServer() {
 const httpMcpServer = buildMcpServer();
 const sseMcpServer = buildMcpServer();
 
-let streamableTransport = null;
 let sseTransport = null;
 
 async function handleStreamableHttp(req, res) {
   try {
-    if (!streamableTransport) {
-      // Stateless mode: no session ID requirement.
-      streamableTransport = new StreamableHTTPServerTransport({
-        sessionIdGenerator: undefined
-      });
-      await httpMcpServer.connect(streamableTransport);
-    }
-
-    await streamableTransport.handleRequest(req, res, req.body);
+    // Create a fresh transport for each request (stateless mode)
+    const transport = new StreamableHTTPServerTransport({
+      sessionIdGenerator: undefined
+    });
+    await httpMcpServer.connect(transport);
+    await transport.handleRequest(req, res, req.body);
   } catch (error) {
     console.error("HTTP MCP transport error", error);
     if (!res.headersSent) {
