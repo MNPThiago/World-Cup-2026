@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import crypto from "crypto";
 import express from "express";
 import { fileURLToPath } from "url";
 
@@ -70,23 +71,29 @@ function buildMcpServer() {
 }
 
 // Keep HTTP and SSE transports isolated so either integration can work independently.
+// HTTP MCP: stateful mode with persistent server and transport
 const httpMcpServer = buildMcpServer();
-const sseMcpServer = buildMcpServer();
+const httpTransport = new StreamableHTTPServerTransport({
+  sessionIdGenerator: () => crypto.randomUUID()
+});
 
+// Initialize HTTP MCP at startup
+(async () => {
+  console.log("Initializing HTTP MCP server...");
+  await httpMcpServer.connect(httpTransport);
+  console.log("HTTP MCP server connected");
+})();
+
+const sseMcpServer = buildMcpServer();
 let sseTransport = null;
 
 async function handleStreamableHttp(req, res) {
   try {
-    // Create a fresh transport for each request (stateless mode)
-    const transport = new StreamableHTTPServerTransport({
-      sessionIdGenerator: undefined
-    });
-    await httpMcpServer.connect(transport);
-    await transport.handleRequest(req, res, req.body);
+    await httpTransport.handleRequest(req, res, req.body);
   } catch (error) {
-    console.error("HTTP MCP transport error", error);
+    console.error("HTTP MCP transport error:", error.message);
     if (!res.headersSent) {
-      res.status(500).json({ error: "MCP HTTP transport failure" });
+      res.status(500).json({ error: error.message || "MCP HTTP transport failure" });
     }
   }
 }
@@ -127,7 +134,7 @@ app.post("/messages", async (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("Football V6 MCP server is running. Use /mcp for MCP over HTTP.");
+  res.send("Football V8 MCP server is running. Use /mcp for MCP over HTTP.");
 });
 
 const port = process.env.PORT || 3000;
