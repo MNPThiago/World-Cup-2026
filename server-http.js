@@ -4,8 +4,8 @@ import express from "express";
 import { fileURLToPath } from "url";
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-// Use the official SSEServerTransport for standard HTTP MCP deployments
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
+import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { z } from "zod";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -14,83 +14,127 @@ const __dirname = path.dirname(__filename);
 const app = express();
 app.use(express.json());
 
-// Initialize the MCP Server
-const server = new McpServer({
-  name: "github-match-agent",
-  version: "1.0.0"
-});
-
-// Helper Functions
 function normalizeDate(value) {
-  return new Date(value).toISOString().split("T")[0];
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) {
+    return null;
+  }
+
+  return parsed.toISOString().split("T")[0];
 }
 
 function getMatchesByDate(date) {
-  const filePath = path.join(process.cwd(), "Match.json");
+  const filePath = path.join(__dirname, "Match.json");
   if (!fs.existsSync(filePath)) {
     return [];
   }
-  const matches = JSON.parse(fs.readFileSync(filePath, "utf8"));
-  const target = normalizeDate(date);
 
-  return matches.filter(
-    (m) => normalizeDate(m.MatchDate) === target
-  );
+  const target = normalizeDate(date);
+  if (!target) {
+    return [];
+  }
+
+  const matches = JSON.parse(fs.readFileSync(filePath, "utf8"));
+
+  return matches.filter((m) => normalizeDate(m.MatchDate) === target);
 }
 
-// Define the Tool
-server.tool(
-  "getMatchesByDate",
-  { date: z.string() },
-  async ({ date }) => {
-    const matches = getMatchesByDate(date);
+function buildMcpServer() {
+  const mcp = new McpServer({
+    name: "github-match-agent",
+    version: "1.0.0"
+  });
 
-    console.log("📩 MCP TOOL CALLED");
-    console.log("date:", date);
-    console.log("count:", matches.length);
+  mcp.tool(
+    "getMatchesByDate",
+    { date: z.string() },
+    async ({ date }) => {
+      const matches = getMatchesByDate(date);
 
-    return {
-      content: [
-        {
-          type: "text",
-          text: matches.length > 0
-            ? matches.map(m => `- ${m.Match}`).join("\n")
-            : `No matches found for ${date}`
-        }
-      ]
-    };
+      console.log("MCP tool called: getMatchesByDate", { date, count: matches.length });
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: matches.length > 0
+              ? matches.map((m) => `- ${m.Match}`).join("\n")
+              : `No matches found for ${date}`
+          }
+        ]
+      };
+    }
+  );
+
+  return mcp;
+}
+
+// Keep HTTP and SSE transports isolated so either integration can work independently.
+const httpMcpServer = buildMcpServer();
+const sseMcpServer = buildMcpServer();
+
+let streamableTransport = null;
+let sseTransport = null;
+
+async function handleStreamableHttp(req, res) {
+  try {
+    if (!streamableTransport) {
+      // Stateless mode: no session ID requirement.
+      streamableTransport = new StreamableHTTPServerTransport({
+        sessionIdGenerator: undefined
+      });
+      await httpMcpServer.connect(streamableTransport);
+    }
+
+    await streamableTransport.handleRequest(req, res, req.body);
+  } catch (error) {
+    console.error("HTTP MCP transport error", error);
+    if (!res.headersSent) {
+      res.status(500).json({ error: "MCP HTTP transport failure" });
+    }
   }
-);
+}
 
-// Track active sessions globally
-let transportSession = null;
+// MCP over Streamable HTTP (for connectors that POST initialize/callTool directly)
+app.all("/mcp", handleStreamableHttp);
 
-// 1. SSE Connection Route (Copilot calls this first)
+// Compatibility route for connectors configured with base path '/'
+app.post("/", handleStreamableHttp);
+
+// MCP over SSE (for clients that do GET /sse then POST /messages)
 app.get("/sse", async (req, res) => {
-  console.log("🔄 Copilot initiating SSE Handshake...");
-  
-  // Point Copilot back to our POST endpoint to handle processing
-  transportSession = new SSEServerTransport("/messages", res);
-  
-  await server.connect(transportSession);
-});
-
-// 2. Message Payload Handler Route (Copilot passes requests here)
-app.post("/messages", async (req, res) => {
-  if (!transportSession) {
-    return res.status(400).json({ error: "No active SSE transport session established." });
+  try {
+    console.log("SSE handshake started");
+    sseTransport = new SSEServerTransport("/messages", res);
+    await sseMcpServer.connect(sseTransport);
+  } catch (error) {
+    console.error("SSE transport error", error);
+    if (!res.headersSent) {
+      res.status(500).json({ error: "MCP SSE transport failure" });
+    }
   }
-  
-  console.log("📩 Received Message Payload:", JSON.stringify(req.body));
-  await transportSession.handleMessage(req, res);
 });
 
-// Root Healthcheck
+app.post("/messages", async (req, res) => {
+  try {
+    if (!sseTransport) {
+      return res.status(400).json({ error: "No active SSE session. Call /sse first." });
+    }
+
+    await sseTransport.handleMessage(req, res);
+  } catch (error) {
+    console.error("SSE message handling error", error);
+    if (!res.headersSent) {
+      res.status(500).json({ error: "MCP SSE message failure" });
+    }
+  }
+});
+
 app.get("/", (req, res) => {
-  res.send("Football MCP Server is running cleanly. v5");
+  res.send("Football V6 MCP server is running. Use /mcp for MCP over HTTP.");
 });
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`🚀 MCP Server running on port ${port}`);
+  console.log(`MCP server listening on port ${port}`);
 });
