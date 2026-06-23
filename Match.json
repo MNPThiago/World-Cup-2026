@@ -604,11 +604,11 @@
     "Match": "France vs Iraq",
     "MatchDate": "2026-06-22",
     "Score": [
-      null,
-      null
+      3,
+      0
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t1",
+    "Winner": "France",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -616,11 +616,11 @@
     "Match": "Norway vs Senegal",
     "MatchDate": "2026-06-22",
     "Score": [
-      null,
-      null
+      3,
+      2
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t1",
+    "Winner": "Norway",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -676,11 +676,11 @@
     "Match": "Argentina vs Austria",
     "MatchDate": "2026-06-22",
     "Score": [
-      null,
-      null
+      2,
+      0
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t1",
+    "Winner": "Argentina",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -688,11 +688,11 @@
     "Match": "Jordan vs Algeria",
     "MatchDate": "2026-06-22",
     "Score": [
-      null,
-      null
+      1,
+      2
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t2",
+    "Winner": "Algeria",
     "Source": "openfootball/worldcup.json"
   },
   {
