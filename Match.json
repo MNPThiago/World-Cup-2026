@@ -748,11 +748,11 @@
     "Match": "Portugal vs Uzbekistan",
     "MatchDate": "2026-06-23",
     "Score": [
-      null,
-      null
+      5,
+      0
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t1",
+    "Winner": "Portugal",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -760,11 +760,11 @@
     "Match": "Colombia vs DR Congo",
     "MatchDate": "2026-06-23",
     "Score": [
-      null,
-      null
+      1,
+      0
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t1",
+    "Winner": "Colombia",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -820,10 +820,10 @@
     "Match": "England vs Ghana",
     "MatchDate": "2026-06-23",
     "Score": [
-      null,
-      null
+      0,
+      0
     ],
-    "Result": null,
+    "Result": "draw",
     "Winner": null,
     "Source": "openfootball/worldcup.json"
   },
@@ -832,11 +832,11 @@
     "Match": "Panama vs Croatia",
     "MatchDate": "2026-06-23",
     "Score": [
-      null,
-      null
+      0,
+      1
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t2",
+    "Winner": "Croatia",
     "Source": "openfootball/worldcup.json"
   },
   {
