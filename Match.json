@@ -52,11 +52,11 @@
     "Match": "Czech Republic vs Mexico",
     "MatchDate": "2026-06-24",
     "Score": [
-      null,
-      null
+      0,
+      3
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t2",
+    "Winner": "Mexico",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -64,11 +64,11 @@
     "Match": "South Africa vs South Korea",
     "MatchDate": "2026-06-24",
     "Score": [
-      null,
-      null
+      1,
+      0
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t1",
+    "Winner": "South Africa",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -124,11 +124,11 @@
     "Match": "Switzerland vs Canada",
     "MatchDate": "2026-06-24",
     "Score": [
-      null,
-      null
+      2,
+      1
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t1",
+    "Winner": "Switzerland",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -136,11 +136,11 @@
     "Match": "Bosnia & Herzegovina vs Qatar",
     "MatchDate": "2026-06-24",
     "Score": [
-      null,
-      null
+      3,
+      1
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t1",
+    "Winner": "Bosnia & Herzegovina",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -196,11 +196,11 @@
     "Match": "Scotland vs Brazil",
     "MatchDate": "2026-06-24",
     "Score": [
-      null,
-      null
+      0,
+      3
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t2",
+    "Winner": "Brazil",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -208,11 +208,11 @@
     "Match": "Morocco vs Haiti",
     "MatchDate": "2026-06-24",
     "Score": [
-      null,
-      null
+      4,
+      2
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t1",
+    "Winner": "Morocco",
     "Source": "openfootball/worldcup.json"
   },
   {
