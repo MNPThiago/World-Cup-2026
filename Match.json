@@ -556,10 +556,10 @@
     "Match": "Cape Verde vs Saudi Arabia",
     "MatchDate": "2026-06-26",
     "Score": [
-      null,
-      null
+      0,
+      0
     ],
-    "Result": null,
+    "Result": "draw",
     "Winner": null,
     "Source": "openfootball/worldcup.json"
   },
@@ -568,11 +568,11 @@
     "Match": "Uruguay vs Spain",
     "MatchDate": "2026-06-26",
     "Score": [
-      null,
-      null
+      0,
+      1
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t2",
+    "Winner": "Spain",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -628,11 +628,11 @@
     "Match": "Norway vs France",
     "MatchDate": "2026-06-26",
     "Score": [
-      null,
-      null
+      1,
+      4
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t2",
+    "Winner": "France",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -640,11 +640,11 @@
     "Match": "Senegal vs Iraq",
     "MatchDate": "2026-06-26",
     "Score": [
-      null,
-      null
+      5,
+      0
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t1",
+    "Winner": "Senegal",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -865,19 +865,19 @@
   },
   {
     "MatchID": "M73",
-    "Match": "2A vs 2B",
+    "Match": "South Africa vs Canada",
     "MatchDate": "2026-06-28",
     "Score": [
-      null,
-      null
+      0,
+      1
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t2",
+    "Winner": "Canada",
     "Source": "openfootball/worldcup.json"
   },
   {
     "MatchID": "M74",
-    "Match": "1E vs 3A/B/C/D/F",
+    "Match": "Germany vs Paraguay",
     "MatchDate": "2026-06-29",
     "Score": [
       null,
@@ -889,7 +889,7 @@
   },
   {
     "MatchID": "M75",
-    "Match": "1F vs 2C",
+    "Match": "Netherlands vs Morocco",
     "MatchDate": "2026-06-29",
     "Score": [
       null,
@@ -901,7 +901,7 @@
   },
   {
     "MatchID": "M76",
-    "Match": "1C vs 2F",
+    "Match": "Brazil vs Japan",
     "MatchDate": "2026-06-29",
     "Score": [
       null,
@@ -913,7 +913,7 @@
   },
   {
     "MatchID": "M77",
-    "Match": "1I vs 3C/D/F/G/H",
+    "Match": "France vs Sweden",
     "MatchDate": "2026-06-30",
     "Score": [
       null,
@@ -925,7 +925,7 @@
   },
   {
     "MatchID": "M78",
-    "Match": "2E vs 2I",
+    "Match": "Ivory Coast vs Norway",
     "MatchDate": "2026-06-30",
     "Score": [
       null,
@@ -937,7 +937,7 @@
   },
   {
     "MatchID": "M79",
-    "Match": "1A vs 3C/E/F/H/I",
+    "Match": "Mexico vs Ecuador",
     "MatchDate": "2026-06-30",
     "Score": [
       null,
@@ -949,7 +949,7 @@
   },
   {
     "MatchID": "M80",
-    "Match": "1L vs 3E/H/I/J/K",
+    "Match": "England vs DR Congo",
     "MatchDate": "2026-07-01",
     "Score": [
       null,
@@ -961,7 +961,7 @@
   },
   {
     "MatchID": "M81",
-    "Match": "1D vs 3B/E/F/I/J",
+    "Match": "USA vs Bosnia & Herzegovina",
     "MatchDate": "2026-07-01",
     "Score": [
       null,
@@ -973,7 +973,7 @@
   },
   {
     "MatchID": "M82",
-    "Match": "1G vs 3A/E/H/I/J",
+    "Match": "Belgium vs Senegal",
     "MatchDate": "2026-07-01",
     "Score": [
       null,
@@ -985,7 +985,7 @@
   },
   {
     "MatchID": "M83",
-    "Match": "2K vs 2L",
+    "Match": "Portugal vs Croatia",
     "MatchDate": "2026-07-02",
     "Score": [
       null,
@@ -997,7 +997,7 @@
   },
   {
     "MatchID": "M84",
-    "Match": "1H vs 2J",
+    "Match": "Spain vs Austria",
     "MatchDate": "2026-07-02",
     "Score": [
       null,
@@ -1009,7 +1009,7 @@
   },
   {
     "MatchID": "M85",
-    "Match": "1B vs 3E/F/G/I/J",
+    "Match": "Switzerland vs Algeria",
     "MatchDate": "2026-07-02",
     "Score": [
       null,
@@ -1021,7 +1021,7 @@
   },
   {
     "MatchID": "M86",
-    "Match": "1J vs 2H",
+    "Match": "Argentina vs Cape Verde",
     "MatchDate": "2026-07-03",
     "Score": [
       null,
@@ -1033,7 +1033,7 @@
   },
   {
     "MatchID": "M87",
-    "Match": "1K vs 3D/E/I/J/L",
+    "Match": "Colombia vs Ghana",
     "MatchDate": "2026-07-03",
     "Score": [
       null,
@@ -1045,7 +1045,7 @@
   },
   {
     "MatchID": "M88",
-    "Match": "2D vs 2G",
+    "Match": "Australia vs Egypt",
     "MatchDate": "2026-07-03",
     "Score": [
       null,
@@ -1069,7 +1069,7 @@
   },
   {
     "MatchID": "M90",
-    "Match": "W73 vs W75",
+    "Match": "Canada vs W75",
     "MatchDate": "2026-07-04",
     "Score": [
       null,
