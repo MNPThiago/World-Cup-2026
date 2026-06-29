@@ -484,10 +484,10 @@
     "Match": "Egypt vs Iran",
     "MatchDate": "2026-06-26",
     "Score": [
-      null,
-      null
+      1,
+      1
     ],
-    "Result": null,
+    "Result": "draw",
     "Winner": null,
     "Source": "openfootball/worldcup.json"
   },
@@ -496,11 +496,11 @@
     "Match": "New Zealand vs Belgium",
     "MatchDate": "2026-06-26",
     "Score": [
-      null,
-      null
+      1,
+      5
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t2",
+    "Winner": "Belgium",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -700,10 +700,10 @@
     "Match": "Algeria vs Austria",
     "MatchDate": "2026-06-27",
     "Score": [
-      null,
-      null
+      3,
+      3
     ],
-    "Result": null,
+    "Result": "draw",
     "Winner": null,
     "Source": "openfootball/worldcup.json"
   },
@@ -712,11 +712,11 @@
     "Match": "Jordan vs Argentina",
     "MatchDate": "2026-06-27",
     "Score": [
-      null,
-      null
+      1,
+      3
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t2",
+    "Winner": "Argentina",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -772,10 +772,10 @@
     "Match": "Colombia vs Portugal",
     "MatchDate": "2026-06-27",
     "Score": [
-      null,
-      null
+      0,
+      0
     ],
-    "Result": null,
+    "Result": "draw",
     "Winner": null,
     "Source": "openfootball/worldcup.json"
   },
@@ -784,11 +784,11 @@
     "Match": "DR Congo vs Uzbekistan",
     "MatchDate": "2026-06-27",
     "Score": [
-      null,
-      null
+      3,
+      1
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t1",
+    "Winner": "DR Congo",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -844,11 +844,11 @@
     "Match": "Panama vs England",
     "MatchDate": "2026-06-27",
     "Score": [
-      null,
-      null
+      0,
+      2
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t2",
+    "Winner": "England",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -856,11 +856,11 @@
     "Match": "Croatia vs Ghana",
     "MatchDate": "2026-06-27",
     "Score": [
-      null,
-      null
+      2,
+      1
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t1",
+    "Winner": "Croatia",
     "Source": "openfootball/worldcup.json"
   },
   {
