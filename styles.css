@@ -63,6 +63,10 @@ header p {
   grid-template-columns: 220px 1fr 140px 1fr;
 }
 
+.card-grid.no-draw {
+  grid-template-columns: 220px 1fr 1fr;
+}
+
 /* Dividers between columns */
 .card-grid > * + * {
   border-left: 1px solid var(--border);
@@ -219,6 +223,9 @@ header p {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto auto;
   }
+  .card-grid.no-draw {
+    grid-template-columns: 1fr 1fr;
+  }
   .card-grid > * + * { border-left: none; }
   .col-match {
     grid-column: 1 / -1;
@@ -230,6 +237,8 @@ header p {
     text-align: left;
   }
   .col-team1 { border-right: 1px solid var(--border); }
+  .card-grid.no-draw .col-team1 { border-right: 1px solid var(--border); border-top: 1px solid var(--border); }
+  .card-grid.no-draw .col-team2 { border-top: 1px solid var(--border); border-left: 1px solid var(--border); }
   .col-draw   { border-top: 1px solid var(--border); }
   .col-team2  { border-top: 1px solid var(--border); border-left: 1px solid var(--border); }
 }

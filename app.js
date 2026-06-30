@@ -19,6 +19,26 @@ function isFutureDateLabel(dateLabel) {
   return matchDate > today;
 }
 
+function isPlayoffMatch(matchDateLabel) {
+  const matchDate = new Date(`${matchDateLabel}, 2026`);
+  if (isNaN(matchDate.getTime())) return false;
+  matchDate.setHours(0, 0, 0, 0);
+
+  const playoffStart = new Date('2026-06-28T00:00:00');
+  playoffStart.setHours(0, 0, 0, 0);
+  return matchDate >= playoffStart;
+}
+
+function getWinnerBucket(match) {
+  const winner = String(match.winner || '').trim().toLowerCase();
+  if (winner) {
+    if (winner === String(match.team1.name || '').trim().toLowerCase()) return 't1';
+    if (winner === String(match.team2.name || '').trim().toLowerCase()) return 't2';
+  }
+  if (match.result === 't1' || match.result === 't2' || match.result === 'draw') return match.result;
+  return null;
+}
+
 function buildPickers(names, hideNames = false) {
   if (hideNames) return `<span class="empty-note">Predictions hidden until match day</span>`;
   if (names.length === 0) return `<span class="empty-note">No picks</span>`;
@@ -67,7 +87,12 @@ function render() {
     const card = document.createElement('div');
     card.className = 'card';
 
-    const total = m.t1.length + m.draw.length + m.t2.length;
+    const isPlayoff = isPlayoffMatch(m.date);
+    const winnerBucket = getWinnerBucket(m);
+
+    const total = isPlayoff
+      ? m.t1.length + m.t2.length
+      : m.t1.length + m.draw.length + m.t2.length;
     const hasResult = m.result !== null && m.result !== undefined
       && Array.isArray(m.score)
       && m.score.length >= 2
@@ -75,7 +100,7 @@ function render() {
       && m.score[1] !== null;
 
     card.innerHTML = `
-      <div class="card-grid">
+      <div class="card-grid${isPlayoff ? ' no-draw' : ''}">
 
         <!-- Col 1: Match Info -->
         <div class="col-match">
@@ -98,7 +123,7 @@ function render() {
         </div>
 
         <!-- Col 2: Team 1 Win -->
-        <div class="col-pred col-team1${m.result === 't1' ? ' col-winner' : ''}">
+        <div class="col-pred col-team1${winnerBucket === 't1' ? ' col-winner' : ''}">
           <div class="col-header">
             <span class="hflag">${flagImg(m.team1.flag)}</span>
             <span class="hname">${m.team1.name}</span>
@@ -107,17 +132,19 @@ function render() {
           ${buildPickers(m.t1, hidePickerNames)}
         </div>
 
+        ${isPlayoff ? '' : `
         <!-- Col 3: Draw -->
-        <div class="col-pred col-draw${m.result === 'draw' ? ' col-winner' : ''}">
+        <div class="col-pred col-draw${winnerBucket === 'draw' ? ' col-winner' : ''}">
           <div class="col-header">
             <span class="hname">🤝 Draw</span>
             ${hidePickerNames ? '' : `<span class="hcount">${m.draw.length}</span>`}
           </div>
           ${buildPickers(m.draw, hidePickerNames)}
         </div>
+        `}
 
         <!-- Col 4: Team 2 Win -->
-        <div class="col-pred col-team2${m.result === 't2' ? ' col-winner' : ''}">
+        <div class="col-pred col-team2${winnerBucket === 't2' ? ' col-winner' : ''}">
           <div class="col-header">
             <span class="hflag">${flagImg(m.team2.flag)}</span>
             <span class="hname">${m.team2.name}</span>
@@ -138,9 +165,11 @@ function computeLeaderboard() {
   const scores = {};
   const allNames = new Set();
   for (const m of matches) {
-    for (const n of [...m.t1, ...m.draw, ...m.t2]) allNames.add(n);
-    if (!m.result) continue;
-    const winners = m.result === 't1' ? m.t1 : m.result === 't2' ? m.t2 : m.draw;
+    const isPlayoff = isPlayoffMatch(m.date);
+    for (const n of [...m.t1, ...(isPlayoff ? [] : m.draw), ...m.t2]) allNames.add(n);
+    const winnerBucket = getWinnerBucket(m);
+    if (!winnerBucket) continue;
+    const winners = winnerBucket === 't1' ? m.t1 : winnerBucket === 't2' ? m.t2 : m.draw;
     for (const n of winners) scores[n] = (scores[n] || 0) + 1;
   }
   return [...allNames]
