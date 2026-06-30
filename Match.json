@@ -880,11 +880,11 @@
     "Match": "Germany vs Paraguay",
     "MatchDate": "2026-06-29",
     "Score": [
-      null,
-      null
+      1,
+      1
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "draw",
+    "Winner": "Paraguay",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -892,11 +892,11 @@
     "Match": "Netherlands vs Morocco",
     "MatchDate": "2026-06-29",
     "Score": [
-      null,
-      null
+      1,
+      1
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "draw",
+    "Winner": "Morocco",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -904,11 +904,11 @@
     "Match": "Brazil vs Japan",
     "MatchDate": "2026-06-29",
     "Score": [
-      null,
-      null
+      2,
+      1
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t1",
+    "Winner": "Brazil",
     "Source": "openfootball/worldcup.json"
   },
   {
