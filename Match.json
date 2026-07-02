@@ -884,7 +884,7 @@
       1
     ],
     "Result": "draw",
-    "Winner": "Paraguay",
+    "Winner": null,
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -896,7 +896,7 @@
       1
     ],
     "Result": "draw",
-    "Winner": "Morocco",
+    "Winner": null,
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -916,11 +916,11 @@
     "Match": "France vs Sweden",
     "MatchDate": "2026-06-30",
     "Score": [
-      null,
-      null
+      3,
+      0
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t1",
+    "Winner": "France",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -928,11 +928,11 @@
     "Match": "Ivory Coast vs Norway",
     "MatchDate": "2026-06-30",
     "Score": [
-      null,
-      null
+      1,
+      2
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t2",
+    "Winner": "Norway",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -940,11 +940,11 @@
     "Match": "Mexico vs Ecuador",
     "MatchDate": "2026-06-30",
     "Score": [
-      null,
-      null
+      2,
+      0
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t1",
+    "Winner": "Mexico",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -952,11 +952,11 @@
     "Match": "England vs DR Congo",
     "MatchDate": "2026-07-01",
     "Score": [
-      null,
-      null
+      2,
+      1
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t1",
+    "Winner": "England",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -964,11 +964,11 @@
     "Match": "USA vs Bosnia & Herzegovina",
     "MatchDate": "2026-07-01",
     "Score": [
-      null,
-      null
+      2,
+      0
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t1",
+    "Winner": "USA",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -976,11 +976,11 @@
     "Match": "Belgium vs Senegal",
     "MatchDate": "2026-07-01",
     "Score": [
-      null,
-      null
+      2,
+      2
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t1",
+    "Winner": "Belgium",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -1057,7 +1057,7 @@
   },
   {
     "MatchID": "M89",
-    "Match": "W74 vs W77",
+    "Match": "Paraguay vs France",
     "MatchDate": "2026-07-04",
     "Score": [
       null,
@@ -1069,7 +1069,7 @@
   },
   {
     "MatchID": "M90",
-    "Match": "Canada vs W75",
+    "Match": "Canada vs Morocco",
     "MatchDate": "2026-07-04",
     "Score": [
       null,
@@ -1081,7 +1081,7 @@
   },
   {
     "MatchID": "M91",
-    "Match": "W76 vs W78",
+    "Match": "Brazil vs Norway",
     "MatchDate": "2026-07-05",
     "Score": [
       null,
@@ -1093,7 +1093,7 @@
   },
   {
     "MatchID": "M92",
-    "Match": "W79 vs W80",
+    "Match": "Mexico vs England",
     "MatchDate": "2026-07-05",
     "Score": [
       null,
@@ -1117,7 +1117,7 @@
   },
   {
     "MatchID": "M94",
-    "Match": "W81 vs W82",
+    "Match": "USA vs Belgium",
     "MatchDate": "2026-07-06",
     "Score": [
       null,
