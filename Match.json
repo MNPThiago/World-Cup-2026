@@ -988,11 +988,11 @@
     "Match": "Portugal vs Croatia",
     "MatchDate": "2026-07-02",
     "Score": [
-      null,
-      null
+      2,
+      1
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t1",
+    "Winner": "Portugal",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -1000,11 +1000,11 @@
     "Match": "Spain vs Austria",
     "MatchDate": "2026-07-02",
     "Score": [
-      null,
-      null
+      3,
+      0
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t1",
+    "Winner": "Spain",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -1012,11 +1012,11 @@
     "Match": "Switzerland vs Algeria",
     "MatchDate": "2026-07-02",
     "Score": [
-      null,
-      null
+      2,
+      0
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t1",
+    "Winner": "Switzerland",
     "Source": "openfootball/worldcup.json"
   },
   {
