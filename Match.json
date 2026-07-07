@@ -1028,7 +1028,7 @@
       1
     ],
     "Result": "draw",
-    "Winner": "Argentina",
+    "Winner": null,
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -1052,7 +1052,7 @@
       1
     ],
     "Result": "draw",
-    "Winner": "Egypt",
+    "Winner": null,
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -1108,11 +1108,11 @@
     "Match": "Portugal vs Spain",
     "MatchDate": "2026-07-06",
     "Score": [
-      null,
-      null
+      0,
+      1
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t2",
+    "Winner": "Spain",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -1120,11 +1120,11 @@
     "Match": "USA vs Belgium",
     "MatchDate": "2026-07-06",
     "Score": [
-      null,
-      null
+      1,
+      4
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t2",
+    "Winner": "Belgium",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -1165,7 +1165,7 @@
   },
   {
     "MatchID": "M98",
-    "Match": "W93 vs W94",
+    "Match": "Spain vs Belgium",
     "MatchDate": "2026-07-10",
     "Score": [
       null,
