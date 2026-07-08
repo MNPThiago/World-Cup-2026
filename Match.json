@@ -1132,11 +1132,11 @@
     "Match": "Argentina vs Egypt",
     "MatchDate": "2026-07-07",
     "Score": [
-      null,
-      null
+      3,
+      2
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t1",
+    "Winner": "Argentina",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -1144,11 +1144,11 @@
     "Match": "Switzerland vs Colombia",
     "MatchDate": "2026-07-07",
     "Score": [
-      null,
-      null
+      0,
+      0
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "draw",
+    "Winner": "Switzerland",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -1189,7 +1189,7 @@
   },
   {
     "MatchID": "M100",
-    "Match": "W95 vs W96",
+    "Match": "Argentina vs Switzerland",
     "MatchDate": "2026-07-11",
     "Score": [
       null,
