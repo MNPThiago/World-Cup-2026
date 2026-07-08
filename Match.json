@@ -884,7 +884,7 @@
       1
     ],
     "Result": "draw",
-    "Winner": null,
+    "Winner": "Paraguay",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -896,7 +896,7 @@
       1
     ],
     "Result": "draw",
-    "Winner": null,
+    "Winner": "Morocco",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -980,7 +980,7 @@
       2
     ],
     "Result": "draw",
-    "Winner": null,
+    "Winner": "Belgium",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -1028,7 +1028,7 @@
       1
     ],
     "Result": "draw",
-    "Winner": null,
+    "Winner": "Argentina",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -1052,7 +1052,7 @@
       1
     ],
     "Result": "draw",
-    "Winner": null,
+    "Winner": "Egypt",
     "Source": "openfootball/worldcup.json"
   },
   {
