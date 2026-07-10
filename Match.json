@@ -1156,11 +1156,11 @@
     "Match": "France vs Morocco",
     "MatchDate": "2026-07-09",
     "Score": [
-      null,
-      null
+      2,
+      0
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t1",
+    "Winner": "France",
     "Source": "openfootball/worldcup.json"
   },
   {
