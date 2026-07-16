@@ -1204,11 +1204,11 @@
     "Match": "France vs Spain",
     "MatchDate": "2026-07-14",
     "Score": [
-      null,
-      null
+      0,
+      2
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t2",
+    "Winner": "Spain",
     "Source": "openfootball/worldcup.json"
   },
   {
@@ -1216,16 +1216,16 @@
     "Match": "England vs Argentina",
     "MatchDate": "2026-07-15",
     "Score": [
-      null,
-      null
+      1,
+      2
     ],
-    "Result": null,
-    "Winner": null,
+    "Result": "t2",
+    "Winner": "Argentina",
     "Source": "openfootball/worldcup.json"
   },
   {
     "MatchID": "M103",
-    "Match": "L101 vs L102",
+    "Match": "France vs England",
     "MatchDate": "2026-07-18",
     "Score": [
       null,
@@ -1237,7 +1237,7 @@
   },
   {
     "MatchID": "M104",
-    "Match": "W101 vs W102",
+    "Match": "Spain vs Argentina",
     "MatchDate": "2026-07-19",
     "Score": [
       null,
